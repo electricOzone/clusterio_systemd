@@ -1,0 +1,23 @@
+[Unit]
+Description=Factorio Server - clusterio
+
+[Service]
+WorkingDirectory=/opt/factorio/factorioClusterio
+User=factorio
+Group=factorio
+Restart=always
+RemainAfterExit=yes
+
+ExecStart=/opt/factorio/factorioClusterio/startCluster.sh
+
+ExecStop=/usr/bin/tmux send-keys -t factorioClusterio-01_mall 'SERVER SHUTTING DOWN. Saving map...' 'C-m'
+ExecStop=/usr/bin/tmux send-keys -t factorioClusterio-02_mining 'SERVER SHUTTING DOWN. Saving map...' 'C-m'
+ExecStop=/bin/sleep 5
+ExecStop=/usr/bin/tmux send-keys -t factorioClusterio-01_mall 'C-c'
+ExecStop=/usr/bin/tmux send-keys -t factorioClusterio-02_mining 'C-c'
+ExecStop=/bin/sleep 15
+ExecStop=/usr/bin/tmux send-keys -t factorioClusterio-master 'C-c'
+ExecStop=/bin/sleep 5
+
+[Install]
+WantedBy=multi-user.target
